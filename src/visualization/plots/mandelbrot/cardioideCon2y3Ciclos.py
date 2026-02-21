@@ -1,17 +1,17 @@
 """
 Cardioide principal, 2-ciclo atractor y 3-ciclos atractores en el plano complejo.
+NOTA: tarda bastante en ejecutar porque se realizan muchas iteraciones para poder detectar el periodo 3 en c=-1.75.
 """
 
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.path import Path as MPath          # ← Import correcto para polígonos
+from matplotlib.path import Path as MPath          
 from multiprocessing import Pool, cpu_count
-from pathlib import Path as PathlibPath            # ← Renombrado para evitar conflicto
+from pathlib import Path as PathlibPath            
 import sys
 
 
 def iterate_fc_vector(c, N=800):
-    """Itera z → z² + c y devuelve la órbita completa."""
     z = np.zeros_like(c, dtype=complex)
     orbit = np.zeros((N, c.size), dtype=complex)
     for i in range(N):
@@ -21,7 +21,6 @@ def iterate_fc_vector(c, N=800):
 
 
 def is_strict_period_3(orbit):
-    """Detecta periodo 3 estricto mirando los últimos valores."""
     tail = orbit[-60:]
     Npoints = orbit.shape[1]
     result = np.zeros(Npoints, dtype=bool)
@@ -33,13 +32,10 @@ def is_strict_period_3(orbit):
 
 
 def process_row(x, cardioid_path, center_real, center_imag, radius, im_vals):
-    """Procesa una fila horizontal (valor fijo de Re(c))."""
     row_real = []
     row_imag = []
     for y in im_vals:
         c = np.array([x + 1j * y])
-
-        # Exclusión geométrica
         is_in_disk = (x - center_real)**2 + (y - center_imag)**2 < (radius - 1e-2)**2
         is_in_cardioid = cardioid_path.contains_point((x + 1e-2, y))
 
@@ -52,13 +48,12 @@ def process_row(x, cardioid_path, center_real, center_imag, radius, im_vals):
 
 
 def plot_periodo_3():
-    """Función principal que genera la figura."""
-    # 1. Cardioide principal
+    # Cardioide principal
     t = np.linspace(0, 2*np.pi, 2000)
     c_cardioid = 0.5*np.exp(1j*t) - 0.25*np.exp(2j*t)
     cardioid_path = MPath(np.column_stack([c_cardioid.real, c_cardioid.imag]))
 
-    # 2. Disco del 2-ciclo
+    # Disco del 2-ciclo
     center_real = -1.0
     center_imag = 0.0
     radius = 0.25
@@ -67,12 +62,9 @@ def plot_periodo_3():
     x_disk = center_real + radius * np.cos(t_disk)
     y_disk = center_imag + radius * np.sin(t_disk)
 
-    # 3. Muestreo del plano
     re_vals = np.linspace(-2, 0.5, 600)
     im_vals = np.linspace(-1.3, 1.3, 600)
 
-    # Multiprocesamiento
-    print("Calculando puntos con periodo 3... (puede tardar varios minutos)")
     with Pool(cpu_count()) as pool:
         results = pool.starmap(
             process_row,
@@ -84,9 +76,6 @@ def plot_periodo_3():
         C3_real.extend(r_real)
         C3_imag.extend(r_imag)
 
-    print(f"Se encontraron {len(C3_real)} puntos con periodo 3 estricto.")
-
-    # 4. Gráfica final
     fig = plt.figure(figsize=(8, 8), dpi=300)
 
     plt.scatter(C3_real, C3_imag, s=1, color='blue', alpha=0.6)
