@@ -55,4 +55,11 @@ def plot_koch_snowflake(side_length, iterations, figsize, dpi):
 # ── Ejecución directa ────────────────────────────────
 if __name__ == "__main__":
     fig = plot_koch_snowflake(200,6,(6,6),400)
+    
+    import os
+    from pathlib import Path
+    ruta_completa = Path("resultados/figuras") / f"koch.pdf"
+
+    fig.savefig(ruta_completa, format="pdf", dpi=400, bbox_inches="tight")
+    print(f"Figura guardada en: {ruta_completa.resolve()}")
     plt.show()
