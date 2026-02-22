@@ -11,6 +11,9 @@ Implementación y visualización de fractales clásicos:
 - Función de Weierstrass  
 - Relación Mandelbrot–Julia
 
+## Observaciones
+La mayoría de imágenes se generan iterando una función un cierto número de iteraciones. Está elegido uno en cada caso para que la figura se vea con una precisión razonable, pero este puede aumentarse o reducirse.
+
 ## Instalación
 
 ```bash
