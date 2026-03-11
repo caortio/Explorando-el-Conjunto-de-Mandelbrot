@@ -1,0 +1,110 @@
+\documentclass{article}
+\usepackage{tikz}
+\usepackage{pgfplots}
+
+\begin{document}
+
+% ===================== FIGURA 1: c = -1.31 =====================
+\begin{tikzpicture}[scale=3]
+% Parámetro c
+\def\cre{-1.31}
+\def\cim{0}  
+% Ejes
+\draw(-1.5,0) -- (0.5,0);
+\draw (0,-1.) -- (0,1.);
+
+% Cardioide principal
+\draw[thick,blue,smooth,domain=0:360,samples=400]
+plot ({0.5*cos(\x) - 0.25*cos(2*\x)},
+      {0.5*sin(\x) - 0.25*sin(2*\x)});
+
+% Disco de 2-ciclo (radio 0.25 centrado en -1)
+\draw[thick,blue,smooth] (-1,0) circle[radius=0.25];
+
+%Bulbos periodo 3 (quito uno)
+\draw[thick,blue,smooth] (-0.12256,0.74486) circle[radius=0.09537];
+\draw[thick,blue,smooth] (-0.12256,-0.74486) circle[radius=0.09537];
+
+%Bulbos periodo 4
+\draw[thick,blue, smooth] (0.282, 0.530) circle[radius=0.045];
+\draw[thick,blue, smooth] (0.282, -0.530) circle[radius=0.045];
+\draw[thick,blue, smooth] (-1.3107,0) circle[radius=0.05];
+
+\pgfmathsetmacro{\x}{\cre}
+\pgfmathsetmacro{\y}{\cim}
+
+% Punto inicial c
+\fill[red](\x,\y) circle (0.02) node[above left] {$\x+\y i$};
+
+% Iteraciones 
+\foreach \n in {1,...,30} {
+
+    % Calcular z_{n+1}
+    \pgfmathsetmacro{\xn}{\x*\x - \y*\y + \cre}
+    \pgfmathsetmacro{\yn}{2*\x*\y + \cim}
+
+    % Dibujar segmento
+    \draw[gray] (\x,\y) -- (\xn,\yn);
+
+    % Dibujar puntos
+    \fill[black] (\xn,\yn) circle (0.02);
+
+    % Actualizar valores
+    \xdef\x{\xn}
+    \xdef\y{\yn}
+}
+\end{tikzpicture}
+\quad
+% ===================== FIGURA 2: c = 0.282 + 0.53i =====================
+\begin{tikzpicture}[scale=3]
+% Parámetro c
+\def\cre{0.282}
+\def\cim{0.53}
+
+% Ejes (ajustados para ver bien el disco de periodo 2)
+\draw(-1.5,0) -- (0.5,0);
+\draw (0,-1.) -- (0,1.);
+
+% Cardioide principal
+\draw[thick,blue,smooth,domain=0:360,samples=400]
+plot ({0.5*cos(\x) - 0.25*cos(2*\x)},
+      {0.5*sin(\x) - 0.25*sin(2*\x)});
+
+% Disco de 2-ciclo (radio 0.25 centrado en -1)
+\draw[thick,blue,smooth] (-1,0) circle[radius=0.25];
+
+%Bulbos periodo 3 (quito uno)
+\draw[thick,blue,smooth] (-0.12256,0.74486) circle[radius=0.09537];
+\draw[thick,blue,smooth] (-0.12256,-0.74486) circle[radius=0.09537];
+
+%Bulbos periodo 4
+\draw[thick,blue, smooth] (0.282, 0.530) circle[radius=0.045];
+\draw[thick,blue, smooth] (0.282, -0.530) circle[radius=0.045];
+\draw[thick,blue, smooth] (-1.3107,0) circle[radius=0.05];
+
+\pgfmathsetmacro{\x}{\cre}
+\pgfmathsetmacro{\y}{\cim}
+
+% Punto inicial c
+\fill[red](\x,\y) circle (0.025) node[above right] {$\x+\y i$};
+
+% Iteraciones 
+\foreach \n in {1,...,20} {
+
+    % Calcular z_{n+1}
+    \pgfmathsetmacro{\xn}{\x*\x - \y*\y + \cre}
+    \pgfmathsetmacro{\yn}{2*\x*\y + \cim}
+
+    % Dibujar segmento
+    \draw[gray] (\x,\y) -- (\xn,\yn);
+
+    % Dibujar puntos
+    \fill[black] (\xn,\yn) circle (0.02);
+
+    % Actualizar valores
+    \xdef\x{\xn}
+    \xdef\y{\yn}
+}
+\end{tikzpicture}
+
+\end{document}

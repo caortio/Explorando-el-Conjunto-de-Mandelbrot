@@ -1,0 +1,61 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage{luacode}
+
+\def\escapetime#1#2{\directlua{tex.print(escape_time(#1,#2))}}
+\def\mandcolor#1#2{\directlua{mand_color(#1,#2)}}
+
+\begin{document}
+\begin{luacode}
+local NUMITER=100
+
+point_iter = function (a,b) 
+   local n = 1
+   local x = a
+   local y = b
+   return function ()
+      if n > NUMITER then return nil end
+      n = n+1
+      x,y = x*x - y*y + a, 2*x*y + b
+      return n, x*x + y*y
+   end
+end
+
+escape_time = function (a,b)
+   local esc_time
+   for n, d in point_iter(a,b) do
+      esc_time = n
+      if d > 4 then break end
+   end
+   return esc_time
+end
+
+mand_color = function (a,b)
+   local etime = escape_time(a,b)
+   if etime == NUMITER+1 then 
+      tex.print("black") 
+   else 
+      local percent = 100 * etime / NUMITER
+      tex.print("red!"..percent)
+   end
+end
+\end{luacode}
+
+\begin{tikzpicture}[scale=2]
+   \foreach \x in {-2,-1.99,...,.5}{
+      \foreach \y in {-1.3,-1.29,...,1.3}{
+      \draw[\mandcolor{\x}{\y},fill] (\x,\y) +(-.005,-.005) rectangle +(.005,.005);}
+   }
+ 
+ %dibujo los rayos entorno al 5 ciclo
+ \draw   (-0.5,0.5) --(-0.65,0.55);  \draw  (-0.65,0.55)--(-0.8,0.85);
+ \draw     (-0.47,0.5) --(-0.45,0.65);  \draw  (-0.45,0.65)--(-0.6,0.95);
+ 
+ %dibujo flechas y etiqueta
+ \draw[<->]  (-0.8,0.85)--(-0.6,0.95);
+ \node at (-0.75,1.05) {\scriptsize$\frac{1}{31}$};
+\end{tikzpicture}
+\end{document}
+
+
+%desde C:\Users\ortol\Downloads ejecutar lualatex Mandelbrot_LuaTex.tex
