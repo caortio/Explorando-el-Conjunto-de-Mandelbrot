@@ -3,9 +3,5 @@
 venv/
 ENV/
 
-# Notebooks temporales
-.ipynb_checkpoints/
-*.ipynb_checkpoints/
-
 # Editor
 .vscode/
