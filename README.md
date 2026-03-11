@@ -14,18 +14,8 @@ Implementación y visualización de fractales clásicos:
 ## Observaciones
 La mayoría de imágenes se generan iterando una función un cierto número de iteraciones. Está elegido uno en cada caso para que la figura se vea con una precisión razonable, pero este puede aumentarse o reducirse.
 
-## Instalación
+## Figuras de Python
+python src/python/nombreFichero.py
 
-```bash
-python -m venv .venv
-.\.venv\Scripts\activate    # Windows
-pip install -r requirements.txt
-
-## Figuras de python
-python src/visualization/nombreFichero.py
-
-## Animación del conjunto de Julia
-<video autoplay loop muted width="700">
-  <source src="videos/julia_mandelbrot.mp4" type="video/mp4">
-</video>
-<p><a href="julia_mandelbrot.mp4" target="_blank">Abrir en pantalla completa</a></p>
+## Figuras de latex 
+latex src/latex/nombreFichero.py 
