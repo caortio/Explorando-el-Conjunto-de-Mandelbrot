@@ -1,86 +1,43 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Explorando el Conjunto de Mandelbrot – Julia & Mandelbrot</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mandelbrot & Julia</title>
   <style>
-    body, html {
+    * {
       margin: 0;
       padding: 0;
-      height: 100%;
-      overflow: hidden;
-      background: #000;
-      font-family: Arial, sans-serif;
-      color: #eee;
+      box-sizing: border-box;
     }
-    #container {
-      position: relative;
-      width: 100%;
-      height: 100vh;
+    body, html {
+      height: 100%;
+      background: #000;
+      overflow: hidden;
     }
     video {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;   /* 'cover' si prefieres llenar todo recortando */
+      width: 100vw;
+      height: 100vh;
+      object-fit: contain;   /* ← cambia a 'cover' si quieres que llene todo (puede recortar bordes) */
+      background: #000;
     }
-    #info {
-      position: absolute;
-      bottom: 20px;
-      left: 20px;
-      background: rgba(0,0,0,0.6);
-      padding: 12px 18px;
-      border-radius: 8px;
-      max-width: 400px;
-      font-size: 0.95rem;
-      pointer-events: none;   /* para que no interfiera con clics en el vídeo */
-    }
-    h1 { margin: 0 0 8px; font-size: 1.4rem; }
   </style>
 </head>
 <body>
-
-<div id="container">
-  <video autoplay loop muted playsinline id="mainVideo">
+  <video autoplay loop muted playsinline>
     <source src="julia_mandelbrot.mp4" type="video/mp4">
-    Tu navegador no soporta el elemento vídeo.
   </video>
 
-  <div id="info">
-    <h1>Explorando el Conjunto de Mandelbrot</h1>
-    <p>Trabajo Fin de Grado – Matemáticas<br>Universidad de La Rioja – Carmen Ortiz Olivan (2025-2026)</p>
-    <p><small>Haz clic en cualquier parte para intentar pantalla completa</small></p>
-  </div>
-</div>
-
-<script>
-// Intentar entrar en pantalla completa tras interacción del usuario (requisito obligatorio de navegadores modernos)
-const video = document.getElementById('mainVideo');
-
-function tryFullscreen() {
-  if (video.requestFullscreen) {
-    video.requestFullscreen().catch(() => {});
-  } else if (video.webkitRequestFullscreen) { // Safari/iOS
-    video.webkitRequestFullscreen();
-  } else if (video.msRequestFullscreen) {     // Edge antiguo
-    video.msRequestFullscreen();
-  }
-}
-
-// Entrar en fullscreen con el primer clic/tap en la página
-document.addEventListener('click', () => {
-  tryFullscreen();
-  // Opcional: quitar el texto de ayuda después del primer clic
-  document.getElementById('info').style.opacity = '0.3';
-}, { once: true });
-
-// Opcional: intento suave al cargar (funciona en algunos navegadores/antiguos)
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    if (video.paused) video.play().catch(() => {});
-  }, 600);
-});
-</script>
-
+  <script>
+    // Pantalla completa con un solo clic (necesario por restricciones de navegadores)
+    document.addEventListener('click', function goFull() {
+      const vid = document.querySelector('video');
+      if (vid.requestFullscreen) vid.requestFullscreen();
+      else if (vid.webkitRequestFullscreen) vid.webkitRequestFullscreen();
+      else if (vid.msRequestFullscreen) vid.msRequestFullscreen();
+      // Puedes descomentar la siguiente línea si quieres que el clic solo sirva una vez
+      // document.removeEventListener('click', goFull);
+    }, { once: false });   // ← quita { once: false } si solo quieres que funcione el primer clic
+  </script>
 </body>
 </html>
